@@ -1,25 +1,26 @@
-// const express = require('express');
-// const cors = require('cors');
-
 import express from 'express';
 import cors from 'cors';
-// const nodemailer = require('nodemailer');
 import nodemailer from 'nodemailer';
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_PORT || "http://localhost:3000", 
+    methods: ["GET", "POST","PUT"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.status(200).send('Server');
 });
-app.get('/contact', (req,res) => {
-  res.status(200).send('Contact Us');
-})
+
 
   app.post('/contact', async (req, res) => {
     const { name, email, subject, message } = req.body;
@@ -49,7 +50,10 @@ app.get('/contact', (req,res) => {
     
     try {
       await transporter.sendMail(mailOptions);
-      res.json({ message: 'Email sent successfully.' });
+      const response = { message: 'Email sent successfully.' };
+      console.log(JSON.stringify(response)); 
+      res.json(response); 
+
     } catch (error) {
       console.error('Error sending email:', error);
       res.status(500).json({ error: 'Failed to send email.' });
