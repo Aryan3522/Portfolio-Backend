@@ -13,10 +13,16 @@ app.use(express.urlencoded({ extended: true }));
 // app.post('/',
 //   console.log("Server")
 // )
-app.get('/', (req, res) => {
-  console.log("Server");
-  res.send("Server");
-});
+// app.get('/', (req, res) => {
+//   console.log("Server");
+//   res.send("Server");
+// });
+const homeRouter = require('./routes/home');
+
+// app.post('/',
+//   console.log("Server")
+// )
+app.use('/', homeRouter);
 
 // POST /contact endpoint
 app.post('/contact', async (req, res) => {
@@ -28,13 +34,13 @@ app.post('/contact', async (req, res) => {
 
   // Configure nodemailer transporter (use your SMTP credentials here)
   const transporter = nodemailer.createTransport({
-    host: 'gmail-smtp-in.l.google.com', // Replace with your SMTP host
+    host: 'gmail-smtp-in.l.google.com', 
     port: 587,
     service: 'gmail',
     secure: false,
     auth: {
-      user: 'aryanhooda3522@gmail.com', // Replace with your SMTP username
-      pass: 'disu cadk zzkm hzek', // Replace with your SMTP password
+      user: 'aryanhooda3522@gmail.com', 
+      pass: 'disu cadk zzkm hzek', 
     },
   });
 
