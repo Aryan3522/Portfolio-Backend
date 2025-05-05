@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: true }));
 //   console.log("Server")
 // )
 app.get('/', (req, res) => {
-    console.log("Server")
-  // res.json({ message: "Server" });
+  console.log("Server");
+  res.send("Server");
 });
 
 // POST /contact endpoint
