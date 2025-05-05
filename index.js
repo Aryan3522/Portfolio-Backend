@@ -1,6 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const nodemailer = require('nodemailer');
+// const express = require('express');
+// const cors = require('cors');
+
+import express from 'express';
+import cors from 'cors';
+// const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -10,56 +14,50 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.post('/',
-//   console.log("Server")
-// )
-// app.get('/', (req, res) => {
-//   console.log("Server");
-//   res.send("Server");
-// });
-const homeRouter = require('./routes/home');
+app.get('/', (req, res) => {
+  res.status(200).send('Server');
+});
+app.get('/contact', (req,res) => {
+  res.status(200).send('Contact Us');
+})
 
-// app.post('/',
-//   console.log("Server")
-// )
-app.use('/', homeRouter);
-
-// POST /contact endpoint
-app.post('/contact', async (req, res) => {
-  const { name, email, subject, message } = req.body;
-
-  if (!name || !email || !subject || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-
-  // Configure nodemailer transporter (use your SMTP credentials here)
-  const transporter = nodemailer.createTransport({
-    host: 'gmail-smtp-in.l.google.com', 
-    port: 587,
-    service: 'gmail',
-    secure: false,
-    auth: {
-      user: 'aryanhooda3522@gmail.com', 
-      pass: 'disu cadk zzkm hzek', 
-    },
+  app.post('/contact', async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
+    
+    // Configure nodemailer transporter (use your SMTP credentials here)
+    const transporter = nodemailer.createTransport({
+      host: 'gmail-smtp-in.l.google.com', 
+      port: 587,
+      service: 'gmail',
+      secure: false,
+      auth: {
+        user: 'aryanhooda3522@gmail.com', 
+        pass: 'disu cadk zzkm hzek', 
+      },
+    });
+    
+    const mailOptions = {
+      from: `"${name}" <${email}>`,
+      to: 'aryanhooda3522@gmail.com',
+      subject: subject,
+      text: message,
+    };
+    
+    try {
+      await transporter.sendMail(mailOptions);
+      res.json({ message: 'Email sent successfully.' });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ error: 'Failed to send email.' });
+    }
   });
-
-  const mailOptions = {
-    from: `"${name}" <${email}>`,
-    to: 'aryanhooda3522@gmail.com',
-    subject: subject,
-    text: message,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    res.json({ message: 'Email sent successfully.' });
-  } catch (error) {
-    console.error('Error sending email:', error);
-    res.status(500).json({ error: 'Failed to send email.' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+  
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+  
+  export default app;
