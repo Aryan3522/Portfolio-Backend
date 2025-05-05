@@ -10,6 +10,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// app.post('/',
+//   console.log("Server")
+// )
+app.get('/', (req, res) => {
+    console.log("Server")
+  // res.json({ message: "Server" });
+});
+
 // POST /contact endpoint
 app.post('/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
